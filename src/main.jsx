@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import Login from "./routes/Login.jsx";
 import Navbar from "./components/Navbar.jsx";
@@ -12,7 +12,7 @@ import teamStore from "./redux/teamStore.js";
 import { Provider } from "react-redux";
 import Running from "./routes/Running.jsx";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Login />,
@@ -38,6 +38,10 @@ const router = createBrowserRouter([
         <Running />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: "/*",
+    element: <h2>{window.location}</h2>,
   },
 ]);
 

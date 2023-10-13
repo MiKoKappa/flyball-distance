@@ -21,6 +21,7 @@ const Running = () => {
   const team = useSelector((state) => state.team.value);
   const [dogs, setDogs] = useState([]);
   const [heightModal, setHeightModal] = useState(0);
+  const [historyModal, setHistoryModal] = useState(false);
   const [distances, setDistances] = useState([
     { distanceNow: 0, change: 0, history: [] },
     { distanceNow: 0, change: 0, history: [] },
@@ -106,6 +107,84 @@ const Running = () => {
           </Typography>
         </Box>
       </Modal>
+      <Modal
+        open={historyModal}
+        onClose={() => {
+          const configs = [];
+          for (let i = 0; i < team.length; i++) {
+            const configuration = dogs[i].distances.filter(
+              (el) =>
+                el.handler !== team[i].handler ||
+                (i === 0 ? el.after !== "first" : el.after !== team[i - 1].dog)
+            );
+            configuration.push({
+              after: i === 0 ? "first" : dogs[i - 1].id,
+              handler: team[i].handler,
+              distance: Number(distances[i].distanceNow),
+            });
+            configs.push(configuration);
+          }
+          Promise.all(
+            configs.map((el, i) =>
+              axios.patch(
+                "https://flyball-distance.fly.dev/api/collections/dogs/records/" +
+                  dogs[i].id,
+                { distances: el },
+                {
+                  headers: {
+                    Authorization: localStorage.getItem("pb_token"),
+                  },
+                }
+              )
+            )
+          )
+            .then((val) => {
+              console.log(val);
+              navigate("/teamselect");
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "background.paper",
+
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Change history
+          </Typography>
+          {dogs.map((el, i) => {
+            const historyOfDistance = distances[i].history.join(" ⇾ ");
+            console.log(historyOfDistance);
+            return (
+              <div key={i}>
+                <Divider>
+                  <Typography
+                    variant="subtitle1"
+                    gutterBottom
+                    color={"#6f6f6f"}
+                  >
+                    {el.name}
+                  </Typography>
+                </Divider>
+                <Typography variant="subtitle1" gutterBottom color={"#6f6f6f"}>
+                  {historyOfDistance}
+                </Typography>
+              </div>
+            );
+          })}
+        </Box>
+      </Modal>
       <Container maxWidth="sm">
         {dogs.map((el, i) => (
           <div key={i}>
@@ -178,6 +257,7 @@ const Running = () => {
             onClick={() => {
               const temp = JSON.parse(JSON.stringify(distances));
               for (let i = 0; i < temp.length; i++) {
+                temp[i].history = [...temp[i].history, temp[i].distanceNow];
                 temp[i].distanceNow =
                   Number(temp[i].distanceNow) + Number(temp[i].change);
                 temp[i].change = 0;
@@ -191,43 +271,12 @@ const Running = () => {
             variant="outlined"
             size="large"
             onClick={() => {
-              const configs = [];
-              for (let i = 0; i < team.length; i++) {
-                const configuration = dogs[i].distances.filter(
-                  (el) =>
-                    el.handler !== team[i].handler ||
-                    (i === 0
-                      ? el.after !== "first"
-                      : el.after !== team[i - 1].dog)
-                );
-                configuration.push({
-                  after: i === 0 ? "first" : dogs[i - 1].id,
-                  handler: team[i].handler,
-                  distance: Number(distances[i].distanceNow),
-                });
-                configs.push(configuration);
+              const temp = JSON.parse(JSON.stringify(distances));
+              for (let i = 0; i < temp.length; i++) {
+                temp[i].history = [...temp[i].history, temp[i].distanceNow];
               }
-              Promise.all(
-                configs.map((el, i) =>
-                  axios.patch(
-                    "https://flyball-distance.fly.dev/api/collections/dogs/records/" +
-                      dogs[i].id,
-                    { distances: el },
-                    {
-                      headers: {
-                        Authorization: localStorage.getItem("pb_token"),
-                      },
-                    }
-                  )
-                )
-              )
-                .then((val) => {
-                  console.log(val);
-                  navigate("/teamselect");
-                })
-                .catch((e) => {
-                  console.log(e);
-                });
+              setDistances(temp);
+              setHistoryModal(true);
             }}
           >
             Finish

@@ -1,6 +1,7 @@
 {
   "name": "flyballdistance",
   "private": true,
+  "homepage": "https://mikokappa.github.io/flyball-distance",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
