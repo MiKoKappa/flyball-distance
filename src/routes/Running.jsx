@@ -46,10 +46,18 @@ const Running = () => {
           localStorage.removeItem("pb_token");
           navigate("/login");
         } else {
-          setDogs(res.data.items);
+          let dogsTemp = JSON.parse(JSON.stringify(res.data.items)).sort(
+            (a, b) => {
+              return (
+                team.map((el) => el.dog).indexOf(a.id) -
+                team.map((el) => el.dog).indexOf(b.id)
+              );
+            }
+          );
+          setDogs(dogsTemp);
           let tempDistances = JSON.parse(JSON.stringify(distances));
-          for (let i = 0; i < res.data.items.length; i++) {
-            const configuration = res.data.items[i].distances.filter(
+          for (let i = 0; i < dogsTemp.length; i++) {
+            const configuration = dogsTemp[i].distances.filter(
               (el) =>
                 el.handler === team[i].handler &&
                 (i === 0 ? el.after === "first" : el.after === team[i - 1].dog)
@@ -59,7 +67,7 @@ const Running = () => {
             }
           }
           setDistances(tempDistances);
-          setHeightModal(Math.min(...res.data.items.map((el) => el.height)));
+          setHeightModal(Math.min(...dogsTemp.map((el) => el.height)));
         }
       })
       .catch((e) => {
@@ -170,7 +178,8 @@ const Running = () => {
             onClick={() => {
               const temp = JSON.parse(JSON.stringify(distances));
               for (let i = 0; i < temp.length; i++) {
-                temp[i].distanceNow += temp[i].change;
+                temp[i].distanceNow =
+                  Number(temp[i].distanceNow) + Number(temp[i].change);
                 temp[i].change = 0;
               }
               setDistances(temp);
