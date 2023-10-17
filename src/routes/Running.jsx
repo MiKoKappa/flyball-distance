@@ -103,7 +103,7 @@ const Running = () => {
             Wysokość hopek
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {heightModal}
+            {heightModal} cm
           </Typography>
         </Box>
       </Modal>
@@ -155,7 +155,6 @@ const Running = () => {
             transform: "translate(-50%, -50%)",
             width: 300,
             bgcolor: "background.paper",
-
             boxShadow: 24,
             p: 4,
           }}
@@ -185,7 +184,7 @@ const Running = () => {
           })}
         </Box>
       </Modal>
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" sx={{ marginTop: "2rem" }}>
         {dogs.map((el, i) => (
           <div key={i}>
             <Divider>

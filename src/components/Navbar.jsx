@@ -16,9 +16,8 @@ import {
   ListItemText,
 } from "@mui/material";
 
-const Navbar = () => {
+const Navbar = ({ childBottom, childTop, subheaderTop, subheaderBottom }) => {
   const [drawerState, setDrawerState] = useState(false);
-
   const toggleDrawer = () => {
     setDrawerState(!drawerState);
   };
@@ -58,25 +57,9 @@ const Navbar = () => {
               <MenuIcon />
             </IconButton>
           </Box>
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+          <List subheader={subheaderTop}>{childTop}</List>
           <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+          <List subheader={subheaderBottom}>{childBottom}</List>
         </Box>
       </Drawer>
     </ThemeProvider>

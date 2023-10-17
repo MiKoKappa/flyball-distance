@@ -25,7 +25,6 @@ const router = createHashRouter([
     path: "/teamselect",
     element: (
       <ProtectedRoute>
-        <Navbar />
         <TeamSelect />
       </ProtectedRoute>
     ),
@@ -34,7 +33,6 @@ const router = createHashRouter([
     path: "/running",
     element: (
       <ProtectedRoute>
-        <Navbar />
         <Running />
       </ProtectedRoute>
     ),

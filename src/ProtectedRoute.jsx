@@ -37,7 +37,7 @@ const ProtectedRoute = ({ children }) => {
   ) : auth === 1 ? (
     children
   ) : (
-    <Navigate to="login" />
+    <Navigate to="/login" />
   );
 };
 
