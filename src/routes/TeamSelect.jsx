@@ -41,9 +41,11 @@ const TeamSelect = () => {
   const createDogsString = () => {
     let dogsArray = [];
     for (let i = 0; i < selectedTeam.length; i++) {
-      dogsArray.push(
-        dogs.filter((el) => el.id === selectedTeam[i].dog)[0].name
-      );
+      if (selectedTeam[i].dog !== "-") {
+        dogsArray.push(
+          dogs.filter((el) => el.id === selectedTeam[i].dog)[0].name
+        );
+      }
     }
     return dogsArray.join(" - ");
   };

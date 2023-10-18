@@ -111,7 +111,7 @@ const Running = () => {
         open={historyModal}
         onClose={() => {
           const configs = [];
-          for (let i = 0; i < team.length; i++) {
+          for (let i = 0; i < dogs.length; i++) {
             const configuration = dogs[i].distances.filter(
               (el) =>
                 el.handler !== team[i].handler ||
