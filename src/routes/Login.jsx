@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -34,6 +34,8 @@ const Copyright = (props) => {
 const Login = () => {
   const navigate = useNavigate();
 
+  const [error, setError] = useState(undefined);
+
   const login = useRef();
   const password = useRef();
 
@@ -50,6 +52,7 @@ const Login = () => {
       })
       .catch((err) => {
         console.log(err);
+        setError(err);
       });
   };
 
@@ -91,6 +94,7 @@ const Login = () => {
               sx={{ mt: 1 }}
             >
               <TextField
+                error={error?.response.data.code === 400}
                 margin="normal"
                 required
                 fullWidth
@@ -102,6 +106,8 @@ const Login = () => {
                 autoFocus
               />
               <TextField
+                error={error?.response.data.code === 400}
+                helperText={error?.response.data.message}
                 margin="normal"
                 required
                 fullWidth
