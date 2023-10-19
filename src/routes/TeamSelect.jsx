@@ -249,6 +249,43 @@ const TeamSelect = () => {
             display={"flex"}
             gap={"1rem"}
           >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Button
+                disabled={i === 0}
+                size="small"
+                variant="outlined"
+                onClick={() => {
+                  if (i > 0) {
+                    const tempArr = [...selectedTeam];
+                    [tempArr[i], tempArr[i - 1]] = [tempArr[i - 1], tempArr[i]];
+                    setSelectedTeam(tempArr);
+                  }
+                }}
+              >
+                ▲
+              </Button>
+              <Button
+                size="small"
+                disabled={i === 3}
+                variant="outlined"
+                onClick={() => {
+                  if (i < 3) {
+                    const tempArr = [...selectedTeam];
+                    [tempArr[i + 1], tempArr[i]] = [tempArr[i], tempArr[i + 1]];
+                    setSelectedTeam(tempArr);
+                  }
+                }}
+              >
+                ▼
+              </Button>
+            </Box>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Handler</InputLabel>
               <Select

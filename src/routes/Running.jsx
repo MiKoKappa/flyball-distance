@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   FormControl,
@@ -23,11 +24,12 @@ const Running = () => {
   const [heightModal, setHeightModal] = useState(0);
   const [historyModal, setHistoryModal] = useState(false);
   const [distances, setDistances] = useState([
-    { distanceNow: 0, change: 0, history: [] },
-    { distanceNow: 0, change: 0, history: [] },
-    { distanceNow: 0, change: 0, history: [] },
-    { distanceNow: 0, change: 0, history: [] },
+    { distanceNow: 0, change: 0, history: [], jump: "" },
+    { distanceNow: 0, change: 0, history: [], jump: "" },
+    { distanceNow: 0, change: 0, history: [], jump: "" },
+    { distanceNow: 0, change: 0, history: [], jump: "" },
   ]);
+  const [nowRunning, setNowRunning] = useState(false);
 
   const navigate = useNavigate();
 
@@ -65,6 +67,7 @@ const Running = () => {
             );
             if (configuration.length > 0) {
               tempDistances[i].distanceNow = configuration[0].distance;
+              tempDistances[i].jump = configuration[0].jump;
             }
           }
           setDistances(tempDistances);
@@ -121,9 +124,11 @@ const Running = () => {
               after: i === 0 ? "first" : dogs[i - 1].id,
               handler: team[i].handler,
               distance: Number(distances[i].distanceNow),
+              jump: distances[i].jump,
             });
             configs.push(configuration);
           }
+          console.log(configs);
           Promise.all(
             configs.map((el, i) =>
               axios.patch(
@@ -201,6 +206,21 @@ const Running = () => {
             >
               <FormControl>
                 <TextField
+                  type="text"
+                  id="outlined-basic"
+                  sx={{ width: "3rem" }}
+                  variant="outlined"
+                  value={distances[i].jump}
+                  onChange={(e) => {
+                    let tempDistances = JSON.parse(JSON.stringify(distances));
+                    tempDistances[i].jump = e.target.value;
+                    setDistances(tempDistances);
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <TextField
+                  type="number"
                   id="outlined-basic"
                   label="Distance"
                   variant="outlined"
@@ -214,6 +234,7 @@ const Running = () => {
               </FormControl>
               <FormControl>
                 <TextField
+                  type="number"
                   id="outlined-basic"
                   label="Change"
                   variant="outlined"
@@ -221,6 +242,11 @@ const Running = () => {
                   color={distances[i].change > 0 ? "primary" : ""}
                   focused={distances[i].change > 0}
                   value={distances[i].change}
+                  onChange={(e) => {
+                    let tempDistances = JSON.parse(JSON.stringify(distances));
+                    tempDistances[i].change = e.target.value;
+                    setDistances(tempDistances);
+                  }}
                 />
               </FormControl>
               <Button
@@ -250,21 +276,42 @@ const Running = () => {
         ))}
         <Box mt={"3rem"} sx={{ minWidth: 120 }} display={"flex"} gap={"1rem"}>
           <Button
+            disabled={nowRunning}
             fullWidth
             size="large"
             variant="contained"
             onClick={() => {
-              const temp = JSON.parse(JSON.stringify(distances));
-              for (let i = 0; i < temp.length; i++) {
-                temp[i].history = [...temp[i].history, temp[i].distanceNow];
-                temp[i].distanceNow =
-                  Number(temp[i].distanceNow) + Number(temp[i].change);
-                temp[i].change = 0;
+              if (!nowRunning) {
+                const temp = JSON.parse(JSON.stringify(distances));
+                for (let i = 0; i < temp.length; i++) {
+                  temp[i].history = [...temp[i].history, temp[i].distanceNow];
+                  temp[i].distanceNow =
+                    Number(temp[i].distanceNow) + Number(temp[i].change);
+                  temp[i].change = 0;
+                }
+                setDistances(temp);
+                setNowRunning(true);
+                setTimeout(() => {
+                  setNowRunning(false);
+                }, 15000);
               }
-              setDistances(temp);
             }}
           >
-            RUN
+            {nowRunning ? (
+              <CircularProgress
+                size={24}
+                color="secondary"
+                sx={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  marginTop: "-12px",
+                  marginLeft: "-12px",
+                }}
+              />
+            ) : (
+              "RUN"
+            )}
           </Button>
           <Button
             variant="outlined"
