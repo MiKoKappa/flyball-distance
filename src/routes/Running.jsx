@@ -15,8 +15,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { ThemeProvider } from "@emotion/react";
 import { bulletsTheme } from "../assets/bulletsStyle";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
+import KeyboardArrowUp from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDown from "@mui/icons-material/KeyboardArrowDown";
 
 const Running = () => {
   const team = useSelector((state) => state.team.value);
@@ -202,13 +202,13 @@ const Running = () => {
               key={i}
               sx={{ minWidth: 120 }}
               display={"flex"}
-              gap={"1rem"}
+              gap={"0.5rem"}
             >
               <FormControl>
                 <TextField
                   type="text"
                   id="outlined-basic"
-                  sx={{ width: "3rem" }}
+                  sx={{ maxWidth: "3rem" }}
                   variant="outlined"
                   value={distances[i].jump}
                   onChange={(e) => {
@@ -258,7 +258,7 @@ const Running = () => {
                   setDistances(temp);
                 }}
               >
-                <RemoveIcon />
+                <KeyboardArrowUp />
               </Button>
               <Button
                 size="large"
@@ -269,7 +269,7 @@ const Running = () => {
                   setDistances(temp);
                 }}
               >
-                <AddIcon />
+                <KeyboardArrowDown />
               </Button>
             </Box>
           </div>
