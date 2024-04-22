@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Navigate } from "react-router";
+import { Box, CircularProgress, ThemeProvider } from "@mui/material";
+import { bulletsTheme } from "./assets/bulletsStyle";
 
 const ProtectedRoute = ({ children }) => {
   const [auth, setAuth] = useState(0);
@@ -33,7 +35,17 @@ const ProtectedRoute = ({ children }) => {
   }, []);
 
   return auth === 0 ? (
-    <div>Loading...</div>
+    <ThemeProvider theme={bulletsTheme}>
+      <Box
+        height={"100vh"}
+        width={"100vw"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <CircularProgress />
+      </Box>
+    </ThemeProvider>
   ) : auth === 1 ? (
     children
   ) : (

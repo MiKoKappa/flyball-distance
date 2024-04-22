@@ -208,7 +208,7 @@ const Running = () => {
                 <TextField
                   type="text"
                   id="outlined-basic"
-                  sx={{ maxWidth: "3rem" }}
+                  sx={{ maxWidth: "6rem" }}
                   variant="outlined"
                   value={distances[i].jump}
                   onChange={(e) => {
